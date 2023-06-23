@@ -3,6 +3,7 @@ import { diagonal, horizontal, knightJumping, uniDirectional, vertical } from ".
 import { Bishop } from './Bishop'
 import { Queen }from './Queen'
 import { Rock } from './Rock'
+import { Pawn } from './Pawn'
 import { PLAYERS } from '../constants'
 class King extends Piece{
     constructor(){
@@ -111,8 +112,8 @@ class King extends Piece{
         if(hasKnightJumpingInCheck) return true
 
         //pawn
-        let hasLeftCloseDiagonalInCheck = squares[position.x + 1]?.[position.y + 1]?.piece?.color !== this.color
-        let hasRightCloseDiagonalInCheck = squares[position.x + 1]?.[position.y - 1]?.piece?.color !== this.color
+        let hasLeftCloseDiagonalInCheck = squares[position.x + 1]?.[position.y + 1]?.piece?.color !== this.color && squares[position.x + 1][position.y + 1].piece instanceof Pawn
+        let hasRightCloseDiagonalInCheck = squares[position.x + 1]?.[position.y - 1]?.piece?.color !== this.color && squares[position.x + 1][position.y - 1].piece instanceof Pawn
         if(hasLeftCloseDiagonalInCheck || hasRightCloseDiagonalInCheck) return true
 
         //king
