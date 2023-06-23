@@ -122,7 +122,7 @@ class Pawn extends Piece{
     }
 
     isLegalMove(board, fromPosition, toPosition){
-        const legalMoves = this.getLegalMoves(board, fromPosition, toPosition)
+        const legalMoves = this.getLegalMoves(board, fromPosition)
         return legalMoves.some(move => move.x === toPosition.x && move.y === toPosition.y)
     }
 }

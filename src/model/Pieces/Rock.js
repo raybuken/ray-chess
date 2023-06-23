@@ -1,5 +1,6 @@
 import { Piece } from "../Piece";
 import { Square } from "../Square";
+import { horizontal, vertical } from "../utils/movements";
 
 class Rock extends Piece{
 
@@ -25,57 +26,15 @@ class Rock extends Piece{
 
     getLegalMoves(board, position){
         let squares = [...board.squares]
-        //vertical moves
-        let verticalMoves = []
-        for(let i = position.x + 1; i <= 7; i++){
-            if(squares[i][position.y].piece){
-                if(squares[i][position.y].piece.color !== this.color){
-                    verticalMoves.push(squares[i][position.y])
-                }
-                break;
-            }
-            verticalMoves.push(squares[i][position.y])
-        }
-
-        for(let i = position.x - 1; i >= 0; i--){
-            if(squares[i][position.y].piece){
-                if(squares[i][position.y].piece.color !== this.color){
-                    verticalMoves.push(squares[i][position.y])
-                }
-                break;
-            }
-            verticalMoves.push(squares[i][position.y])
-        }
-
-        //horizontal moves
-        let horizontalMoves = []
-        for(let i = position.y +1; i <=7; i++){
-            if(squares[position.x][i].piece){
-                if(squares[position.x][i].piece.color !== this.color){
-                    horizontalMoves.push(squares[position.x][i])
-                }
-                break;
-            }
-            horizontalMoves.push(squares[position.x][i])
-        }
-
-        for(let i = position.y -1; i >=0; i--){
-            if(squares[position.x][i].piece){
-                if(squares[position.x][i].piece.color !== this.color){
-                    horizontalMoves.push(squares[position.x][i])
-                }
-                break;
-            }
-            horizontalMoves.push(squares[position.x][i])
-        }
-
+        const verticalMoves = vertical(this, squares, position)
+        const horizontalMoves = horizontal(this, squares, position)
         const moves = [...horizontalMoves, ...verticalMoves]
 
         return moves
     }
 
     isLegalMove(board, fromPosition, toPosition){
-        const legalMoves = this.getLegalMoves(board, fromPosition, toPosition)
+        const legalMoves = this.getLegalMoves(board, fromPosition)
         return legalMoves.some(move => move.x === toPosition.x && move.y === toPosition.y)
     }
 }
