@@ -6,7 +6,7 @@ class Queen extends Piece{
     move(board, fromSquare, toSquare){
         const squares = [...board.squares];
 
-        if(this.isLegalMove(fromSquare.position, toSquare.position)){
+        if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
             squares[toSquare.position.x][toSquare.position.y].piece = fromSquare.piece
             squares[fromSquare.position.x][fromSquare.position.y].piece = null
 
@@ -36,7 +36,7 @@ class Queen extends Piece{
 
     isLegalMove(board, fromPosition, toPosition){
         const legalMoves = this.getLegalMoves(board, fromPosition)
-        return legalMoves.some(move => move.x === toPosition.x && move.y === toPosition.y)
+        return legalMoves.some(square => square.position.x === toPosition.x && square.position.y === toPosition.y)
     }
 }
 

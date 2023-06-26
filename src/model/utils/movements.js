@@ -51,55 +51,36 @@ export const vertical = (object, squares, position) => {
 }
 
 export const diagonal = (object, squares, position) => {
-    let moves = []
+    const moves = []
 
-    //right-up diagonal
-    for(let i=position.x + 1, j=position.y+1; i < squares.length && j < squares.length; i++,j++){
-        let piece = squares[i][j].piece
-        if(piece){
-            if(object.color !== squares[position.x][position.y].piece.color){
-                moves.push(squares[i][j])
-            }
-            break;
-        }
-        moves.push(squares[i][j])
-    }
+    //Evaluate any move logic depending of the diagonal
+    const addMoves = (incrementX, incrementY) => {
+        let x = incrementX ? position.x + 1 : position.x - 1 ;
+        let y = incrementY ? position.y + 1 : position.y - 1 ;
 
-    //left-up diagonal
-    for(let i=position.x + 1, j=position.y - 1; i < squares.length && j >= 0; i++,j--){
-        let piece = squares[i][j].piece
-        if(piece){
-            if(object.color !== squares[position.x][position.y].piece.color){
-                moves.push(squares[i][j])
-            }
-            break;
-        }
-        moves.push(squares[i][j])
-    }
+        const xCondition = i => incrementX ? i < squares.length : i >=0
+        const yCondition = j => incrementY ? j < squares.length : j >=0
 
-    //down-right diagonal
-    for(let i=position.x - 1, j=position.y + 1; i >=0 && j >= squares.length; i--,j++){
-        let piece = squares[i][j].piece
-        if(piece){
-            if(object.color !== squares[position.x][position.y].piece.color){
-                moves.push(squares[i][j])
+        for(let i=x, j=y; xCondition(i) && yCondition(j);){
+            let square = squares[i][j]
+            let piece = square?.piece
+            if(square){
+                if(piece){
+                    if(object.color !== piece.color){
+                        moves.push(square)
+                    }
+                    break;
+                }
+                moves.push(square)
             }
-            break;
+            i = incrementX ? i + 1 : i - 1
+            j = incrementY ? j + 1 : j - 1
         }
-        moves.push(squares[i][j])
     }
-
-    //down-left diagonal
-    for(let i=position.x - 1, j=position.y - 1; i >=0 && j >= 0; i--,j--){
-        let piece = squares[i][j].piece
-        if(piece){
-            if(object.color !== squares[position.x][position.y].piece.color){
-                moves.push(squares[i][j])
-            }
-            break;
-        }
-        moves.push(squares[i][j])
-    }
+    addMoves(true, true) //right-up diagonal
+    addMoves(true, false) //left-up diagonal
+    addMoves(false, false) //down-right diagonal
+    addMoves(false, true) //down-left diagonal
 
     return moves
 }
@@ -148,7 +129,7 @@ export const knightJumping = (object, squares, position) => {
     let moves = []
 
     patterns.forEach(pattern => {
-        const move = squares[position.x + pattern[0]]?.[position.y + pattern[1]]
+        const move = squares[position.x + pattern[0]] ? squares[position.x + pattern[0]][position.y + pattern[1]] : null
         if(move){
             if(move.piece){
                 if(move.piece.color !== object.color){
@@ -159,11 +140,5 @@ export const knightJumping = (object, squares, position) => {
             }
         }
     })
-
     return moves
-}
-
-
-export const castlings = (object, squares, position) => {
-
 }

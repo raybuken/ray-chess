@@ -1,3 +1,5 @@
+import { PLAYERS } from "../constants"
+
 class PieceStrategy{
     constructor(piece, board){
         this.piece = piece
@@ -9,6 +11,7 @@ class PieceStrategy{
 
         if(action.ok){
             this.board.update(action.squares)
+            this.board.playingNow = this.board.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
         }
     }
 

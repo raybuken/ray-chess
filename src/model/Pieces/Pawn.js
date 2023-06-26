@@ -4,17 +4,16 @@ import { PROMOTION } from "../promotion";
 
 class Pawn extends Piece{
 
-    constructor(){
-        super()
+    constructor(color){
+        super(color)
         this.enPassant = false
         this.promotion = null
     }
 
     move(board, fromSquare, toSquare){
-        //TODO promotions
         const squares = [...board.squares];
 
-        if(this.isLegalMove(fromSquare.position, toSquare.position)){
+        if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
             //check if should remove adjacent piece
             let enPassantValidation = board.playingNow === PLAYERS.WHITE ? fromSquare.position.x === 4 : fromSquare.position.x === 3
             if(enPassantValidation){
@@ -31,13 +30,13 @@ class Pawn extends Piece{
                 fromSquare.piece.enPassant = true
             }
 
-            let promotion = PROMOTION[this.promotion] ?? PROMOTION.QUEEN
+            const Promotion = PROMOTION[this.promotion] ?? PROMOTION.QUEEN
             if((board.playingNow === PLAYERS.WHITE && toSquare.position.x === 7) || (board.playingNow === PLAYERS.BLACK && toSquare.position.x === 0)){
-                fromSquare.piece = new promotion() //instance any piece to promote
+                fromSquare.piece = new Promotion(board.playingNow) //instance any piece to promote
             }
 
             squares[toSquare.position.x][toSquare.position.y].piece = fromSquare.piece
-            squares[fromSquare.position.x][fromSquare.position.y] = null
+            squares[fromSquare.position.x][fromSquare.position.y].piece = null
 
             return {
                 ok: true,
@@ -65,17 +64,17 @@ class Pawn extends Piece{
                 moves.push(square)
             }
             //initial move
-            square = squares[position.x + 2][position.y]
-            if(position.x === 1 && !square.piece){
-                moves.push(squares[square])
+            square = squares[position.x + 2]?.[position.y]
+            if(position.x === 1 && !squares[position.x +1][position.y]?.piece && !square.piece){
+                moves.push(square)
             }
 
             //capture
-            square = squares[position.x + 1][position.y + 1]
+            square = squares[position.x + 1]?.[position.y + 1]
             if(square && square.piece && square.piece.color !== this.color){
                 moves.push(square)
             }
-            square = squares[position.x + 1][position.y -1]
+            square = squares[position.x + 1]?.[position.y -1]
             if(square && square.piece && square.piece.color !== this.color){
                 moves.push(square)
             }
@@ -96,7 +95,7 @@ class Pawn extends Piece{
             }
 
             //initial move
-            if(position.x === squares.length - 2 && !squares[position.x - 2][position.y].piece){
+            if(position.x === squares.length - 2 && !squares[position.x - 1][position.y]?.piece && !squares[position.x - 2][position.y]?.piece){
                 moves.push(squares[position.x - 2][position.y])
             }
 
@@ -119,11 +118,13 @@ class Pawn extends Piece{
             }
 
         }
+
+        return moves
     }
 
     isLegalMove(board, fromPosition, toPosition){
         const legalMoves = this.getLegalMoves(board, fromPosition)
-        return legalMoves.some(move => move.x === toPosition.x && move.y === toPosition.y)
+        return legalMoves.some(square => square.position.x === toPosition.x && square.position.y === toPosition.y)
     }
 }
 
