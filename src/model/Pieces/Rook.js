@@ -13,6 +13,7 @@ class Rook extends Piece{
         const squares = [...board.squares];
 
         if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
+            this.castling =false
             squares[toSquare.position.x][toSquare.position.y] = new Square(toSquare.position, fromSquare.piece)
             squares[fromSquare.position.x][fromSquare.position.y] = new Square(fromSquare.position)
 
@@ -24,8 +25,7 @@ class Rook extends Piece{
 
         return {
             ok: false,
-            msg: 'Illegal move!',
-            squares
+            msg: 'Illegal move!'
         }
     }
 

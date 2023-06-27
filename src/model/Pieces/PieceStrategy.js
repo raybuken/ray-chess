@@ -1,5 +1,3 @@
-import { PLAYERS } from "../constants"
-
 class PieceStrategy{
     constructor(piece, board){
         this.piece = piece
@@ -7,11 +5,14 @@ class PieceStrategy{
     }
 
     move(fromSquare, toSquare){
+        if(this.piece.color !== this.board.playingNow) {
+            return
+        }
+
         const action = this.piece.move(this.board, fromSquare, toSquare)
 
         if(action.ok){
-            this.board.update(action.squares)
-            this.board.playingNow = this.board.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
+            this.board.update(action.squares, action.lastMove)
         }
     }
 

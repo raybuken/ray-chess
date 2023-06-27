@@ -1,3 +1,4 @@
+import { Move } from "../Move";
 import { Piece } from "../Piece"
 import { PLAYERS } from "../constants";
 import { PROMOTION } from "../promotion";
@@ -6,7 +7,6 @@ class Pawn extends Piece{
 
     constructor(color){
         super(color)
-        this.enPassant = false
         this.promotion = null
     }
 
@@ -15,48 +15,43 @@ class Pawn extends Piece{
 
         if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
             //check if should remove adjacent piece
-            let enPassantValidation = board.playingNow === PLAYERS.WHITE ? fromSquare.position.x === 4 : fromSquare.position.x === 3
+            const {lastMove} = board
+            let enPassantValidation = lastMove?.hasEnPassant && lastMove.to.x === fromSquare.position.x
             if(enPassantValidation){
-                if(toSquare.position.y === fromSquare.position.y + 1 && squares[fromSquare.position.x][toSquare.position.y + 1].piece.enPassant){
-                    squares[fromSquare.position.x][toSquare.position.y + 1].piece = null
-                }
-                if(toSquare.position.y === fromSquare.position.y - 1 && squares[fromSquare.position.x][toSquare.position.y + 1].piece.enPassant){
-                    squares[fromSquare.position.x][toSquare.position.y - 1].piece = null
-                }
+                squares[lastMove.to.x][lastMove.to.y].piece = null
             }
 
             //set enPassant Property
-            if(Math.abs(fromSquare.position.x - toSquare.position.x) === 2){
-                fromSquare.piece.enPassant = true
-            }
+            const hasEnPassantChance = Math.abs(fromSquare.position.x - toSquare.position.x) === 2
 
+            //promotion
             const Promotion = PROMOTION[this.promotion] ?? PROMOTION.QUEEN
             if((board.playingNow === PLAYERS.WHITE && toSquare.position.x === 7) || (board.playingNow === PLAYERS.BLACK && toSquare.position.x === 0)){
                 fromSquare.piece = new Promotion(board.playingNow) //instance any piece to promote
             }
 
+            const isCapture = Boolean(toSquare.piece)
             squares[toSquare.position.x][toSquare.position.y].piece = fromSquare.piece
             squares[fromSquare.position.x][fromSquare.position.y].piece = null
 
             return {
                 ok: true,
-                squares
+                squares,
+                lastMove: new Move(fromSquare.position, toSquare.position, "Pawn", isCapture, hasEnPassantChance)
             }
         }
 
         return {
             ok: false,
-            msg: 'Illegal move!',
-            squares
+            msg: 'Illegal move!'
         }
     }
 
     getLegalMoves(board, position){
         const squares = [...board.squares]
         let moves = []
-        let { playingNow } = board
 
-        if(playingNow === PLAYERS.WHITE) {
+        if(this.color === PLAYERS.WHITE) {
             let square;
             //common move
             square = squares[position.x + 1][position.y]
@@ -80,41 +75,42 @@ class Pawn extends Piece{
             }
 
             //en passant
-            let lateralSquare1 = squares[position.x][position.y + 1]
-            let lateralSquare2 = squares[position.x][position.y + -1]
-            if(position.x === board.length - 3 && lateralSquare1 && lateralSquare1.piece && lateralSquare1.piece.enPassant && lateralSquare1.piece.color !== this.color) {
-                moves.push(squares[position.x + 1][position.y + 1])
-            }
-            if(position.x === board.length - 3 && lateralSquare2 && lateralSquare2.piece && lateralSquare2.piece.enPassant && lateralSquare2.piece.color !== this.color) {
-                moves.push(squares[position.x + 1][position.y + 1])
+            const {lastMove} = board
+            const lateralSquare = lastMove?.hasEnPassant && lastMove.type === "Pawn" && squares[lastMove.to.x][lastMove.to.y]
+
+            if(lateralSquare && position.x === lateralSquare?.position.x){
+                moves.push(squares[position.x + 1][lastMove.to.y])
             }
         }else{
+            let square;
             //common move
-            if(!squares[position.x - 1][position.y].piece){
+            square = squares[position.x - 1][position.y]
+            if(square && !square.piece){
                 moves.push(squares[position.x - 1][position.y])
             }
 
             //initial move
-            if(position.x === squares.length - 2 && !squares[position.x - 1][position.y]?.piece && !squares[position.x - 2][position.y]?.piece){
-                moves.push(squares[position.x - 2][position.y])
+            square = squares[position.x - 2]?.[position.y]
+            if(position.x === squares.length - 2 && squares[position.x - 1][position.y] && !squares[position.x - 1][position.y].piece && square && !square.piece){
+                moves.push(square)
             }
 
             //capture
-            if(squares[position.x - 1][position.y - 1].piece && squares[position.x - 1][position.y - 1].piece.color !== this.color){
-                moves.push(squares[position.x - 1][position.y - 1])
+            square = squares[position.x - 1]?.[position.y - 1]
+            if(square?.piece && square.piece.color !== this.color){
+                moves.push(square)
             }
-            if(squares[position.x - 1][position.y + 1].piece && squares[position.x - 1][position.y + 1].piece.color !== this.color){
-                moves.push(squares[position.x - 1][position.y + 1])
+            square = squares[position.x - 1]?.[position.y + 1]
+            if(square?.piece && square.piece.color !== this.color){
+                moves.push(square)
             }
 
             //en passant
-            let lateralSquare1 = squares[position.x][position.y + 1]
-            let lateralSquare2 = squares[position.x][position.y - 1]
-            if(position.x === 4 && lateralSquare1 && lateralSquare1.piece && lateralSquare1.piece.enPassant && lateralSquare1.piece.color !== this.color) {
-                moves.push(squares[position.x - 1][position.y + 1])
-            }
-            if(position.x === 4 && lateralSquare2 && lateralSquare2.piece && lateralSquare2.piece.enPassant && lateralSquare2.piece.color !== this.color) {
-                moves.push(squares[position.x - 1][position.y - 1])
+            const {lastMove} = board
+            const lateralSquare = lastMove?.hasEnPassant && lastMove.type === "Pawn" && squares[lastMove.to.x][lastMove.to.y]
+
+            if(lateralSquare && position.x === lateralSquare?.position.x){
+                moves.push(squares[position.x - 1][lastMove.to.y])
             }
 
         }

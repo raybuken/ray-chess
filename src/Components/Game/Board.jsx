@@ -1,16 +1,15 @@
-import { useState } from "react"
-import { Board as BoardModel } from "../../model/Board"
+import { useContext, useState } from "react"
 import Square from "./Square"
-import { PLAYERS } from "../../model/constants"
-import { Pawn } from "../../model/Pieces/Pawn"
-import { Position } from "../../model/Position"
 import Promotion from "./Promotion"
+import { BoardDispatchContext, ChessBoardContext } from "../../context/chessBoardContext"
+import PlayingNow from "./PlayingNow"
 
 function Board() {
-    const [board, setBoard] = useState(new BoardModel())
+    const board = useContext(ChessBoardContext)
+    const dispatch = useContext(BoardDispatchContext)
     const [highlightMoves, setHighlightMoves] = useState([])
-    const [fromSquare, setFromSquare] = useState(null)
     const [promotion, setPromotion] = useState(null)
+    const [fromSquare, setFromSquare] = useState(null)
 
     const getSquareColor = (rowNumber, squareNumber) => {
         if(rowNumber%2 === 0){
@@ -19,35 +18,38 @@ function Board() {
         return squareNumber%2 === 0 ? 'dark-square' : 'light-square'
     }
 
-    const handleMove = (toSquare) => {
-        const newBoard = {...board}
-
-        if(fromSquare.piece instanceof Pawn && (board.playingNow === PLAYERS.WHITE ? toSquare.position.x === 7 : toSquare.position.x ===0 )){
-
-            setPromotion({...new Position(toSquare.position.x, toSquare.position.y), fromSquare, toSquare} )
-        }else {
-            fromSquare.piece.move(newBoard, fromSquare, toSquare)
-        }
-        setBoard(newBoard)
-    }
-
     const promotePawn = (piece) => {
-        const newBoard = {...board}
         promotion.fromSquare.piece.promotion = piece
-        promotion.fromSquare.piece.move(newBoard, promotion.fromSquare, promotion.toSquare)
-        setBoard(newBoard)
+        dispatch({
+            type: 'move',
+            board,
+            fromSquare: promotion.fromSquare,
+            toSquare: promotion.toSquare
+        })
         setPromotion(null)
     }
 
     return (
         <div className="game">
+            <PlayingNow/>
             {promotion && <Promotion piece={board.squares[promotion.x][promotion.y].piece} rowPosition={promotion.y} color={board.playingNow} promotePawn={promotePawn}/>}
             <div className="board">
                 {board.squares.map((row,i) => (
                     row.map((square, j) => {
                         const color = getSquareColor(i, j)
                         const highlightMove = Boolean(highlightMoves.find(el => el.x === i && el.y === j))
-                        return <Square board={board} position={square.position} key={j} square={square} squareColor={color} highlightMove={highlightMove} updateLegalMoves={setHighlightMoves} updateFromSquare={setFromSquare} handleMove={handleMove} promotion={promotion} />})
+                        return <Square 
+                                key={j} 
+                                square={square} 
+                                squareColor={color} 
+                                highlightMove={highlightMove} 
+                                updateLegalMoves={setHighlightMoves} 
+                                promotion={promotion} 
+                                updatePromotion={setPromotion}
+                                fromSquare = {fromSquare}
+                                updateFromSquare={setFromSquare}
+                                />
+                    })
                 ))}
             </div>
         </div>

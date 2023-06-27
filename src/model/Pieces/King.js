@@ -17,7 +17,7 @@ class King extends Piece{
         const squares = [...board.squares];
 
         if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
-            const COLOR_FACTOR = PLAYERS.WHITE ? 0 : 7
+            const COLOR_FACTOR = board.playingNow === PLAYERS.WHITE ? 0 : 7
 
             //castling
             if(fromSquare.position.x === COLOR_FACTOR && fromSquare.position.y === 3){
@@ -113,8 +113,8 @@ class King extends Piece{
         if(hasKnightJumpingInCheck) return true
 
         //pawn
-        let hasLeftCloseDiagonalInCheck = squares[position.x + 1]?.[position.y + 1]?.piece?.color !== this.color && squares[position.x + 1][position.y + 1]?.piece instanceof Pawn
-        let hasRightCloseDiagonalInCheck = squares[position.x + 1]?.[position.y - 1]?.piece?.color !== this.color && squares[position.x + 1][position.y - 1]?.piece instanceof Pawn
+        let hasLeftCloseDiagonalInCheck = squares[position.x + 1]?.[position.y + 1]?.piece?.color !== this.color && squares[position.x + 1]?.[position.y + 1]?.piece instanceof Pawn
+        let hasRightCloseDiagonalInCheck = squares[position.x + 1]?.[position.y - 1]?.piece?.color !== this.color && squares[position.x + 1]?.[position.y - 1]?.piece instanceof Pawn
         if(hasLeftCloseDiagonalInCheck || hasRightCloseDiagonalInCheck) return true
 
         //king

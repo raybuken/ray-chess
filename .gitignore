@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 yarn.lock
+package-lock.json
+.yarn
+.pnp.cjs
+.pnp.loader.mjs

@@ -30,6 +30,7 @@ class Board {
         this.squares = newSquares
         this.playingNow = playingNow
         this.fivtyMovesDraw = 0
+        this.lastMove = null
     }
 
     setBoardPieces(squares){
@@ -76,13 +77,14 @@ class Board {
         })
     }
 
-    update(squares){
-        //TODO Deshabilitar peon al paso cuando pase el turno
+    update(squares, lastMove){
         //TODO logica para ir contando/reiniciando regla de 50 pasos
         //TODO detectar ahogado
         //TODO detectar jaque
         //TODO detectar jaquemate
         this.squares = squares
+        this.lastMove = lastMove
+        this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
     }
 }
 
