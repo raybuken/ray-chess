@@ -4,6 +4,7 @@ import { BoardDispatchContext, ChessBoardContext } from "../../context/chessBoar
 import { PLAYERS } from "../../model/constants"
 import { Pawn } from "../../model/Pieces/Pawn"
 import { Position } from "../../model/Position"
+import { PieceStrategy } from "../../model/Pieces/PieceStrategy"
 
 function Square({square, squareColor, highlightMove, updateLegalMoves, updatePromotion, fromSquare, updateFromSquare}){
     const board = useContext(ChessBoardContext)
@@ -25,7 +26,7 @@ function Square({square, squareColor, highlightMove, updateLegalMoves, updatePro
             updateLegalMoves([])
             updateFromSquare(null)
         }else{
-            const moves = piece?.getLegalMoves(board, position).map(sqr => sqr.position) ?? []
+            const moves = new PieceStrategy(piece,board)?.getLegalMoves(position)?.map(sqr => sqr.position) ?? []
             updateLegalMoves(moves)
             updateFromSquare(square)
         }

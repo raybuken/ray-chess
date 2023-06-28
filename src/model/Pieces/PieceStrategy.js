@@ -1,3 +1,5 @@
+import { King } from "./King"
+
 class PieceStrategy{
     constructor(piece, board){
         this.piece = piece
@@ -17,14 +19,17 @@ class PieceStrategy{
     }
 
     getLegalMoves(position){
-        let legalMoves = this.piece.getLegalMoves(this.board, position)
-        if(this.board.isPlayerInCheck()){
-            //TODO
+        let legalMoves = this.piece?.getLegalMoves(this.board, position) ?? []
+        if(this.board.isPlayerInCheck() && !(this.piece instanceof King)){
             legalMoves = legalMoves.filter(move => {
                 const squares = [...this.board.squares]
-                squares[move.position.x][move.position.y].piece = move.piece
-                console.log(squares)
-                return !this.board.isPlayerInCheck(squares)
+                const oldSquare = {...squares[move.position.x][move.position.y]}
+                squares[move.position.x][move.position.y].piece = this.piece
+
+                const isInCheck = !this.board.isPlayerInCheck(squares)
+                squares[move.position.x][move.position.y] = oldSquare
+
+                return isInCheck
             })
         }
         return legalMoves
