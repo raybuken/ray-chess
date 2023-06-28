@@ -86,6 +86,34 @@ class Board {
         this.lastMove = lastMove
         this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
     }
+
+    isPlayerInCheck(squares = this.squares){
+        const kingSquare = this.getKingSquare()
+        return kingSquare.isInCheck(squares, kingSquare.position)
+    }
+
+    hasAnyLegalMove(){
+        const isInCheck = this.isPlayerInCheck()
+
+        
+    }
+
+    isCheckmate(){
+        return this.isPlayerInCheck() && !this.hasAnyLegalMove()
+    }
+
+    getKingSquare(){
+        for(let i=0;i<this.squares.length;i++){
+            for(let j=0;j<this.squares[i].length;j++){ 
+                const square = this.squares[i][j] 
+                const {piece} = square
+                if(piece && piece.color === this.playingNow && piece instanceof King){
+                    return square
+                }
+            }
+        }
+        throw new Error("Must have a king in the board!")
+    }
 }
 
 export { Board }

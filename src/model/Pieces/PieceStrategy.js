@@ -17,7 +17,17 @@ class PieceStrategy{
     }
 
     getLegalMoves(position){
-        return this.piece.getLegalMoves(this.board, position)
+        let legalMoves = this.piece.getLegalMoves(this.board, position)
+        if(this.board.isPlayerInCheck()){
+            //TODO
+            legalMoves = legalMoves.filter(move => {
+                const squares = [...this.board.squares]
+                squares[move.position.x][move.position.y].piece = move.piece
+                console.log(squares)
+                return !this.board.isPlayerInCheck(squares)
+            })
+        }
+        return legalMoves
     }
 
     isLegalMove(fromPosition, toPosition){

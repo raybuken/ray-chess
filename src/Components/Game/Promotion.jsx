@@ -40,7 +40,7 @@ function Promotion({color, rowPosition, promotePawn}) {
         <div className="promotion" style={{left: pos + "px"}}>
             {promotionPieces.map((promotionPiece, i) => (
                 <div className="promotion-piece" key={i} onClick={() => promotePawn(promotionPiece)}>
-                    <img src={getPieceSrc(color, PROMOTION[promotionPiece])} alt="piece" />
+                    <img src={getPieceSrc(color, PROMOTION[promotionPiece])} alt="piece" width={32} height={32} />
                 </div>
             ))}
         </div>

@@ -33,7 +33,7 @@ export default function Piece({piece}){
       return piece.color === PLAYERS.WHITE ? white_pawn : black_pawn
    }
 
-   if(piece) return <img className='piece' src={getPieceSrc()} alt="piece" />
+   if(piece) return <img className='piece' src={getPieceSrc()} alt="piece" width={32} height={32} />
 
    return
 }

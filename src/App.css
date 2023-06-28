@@ -43,6 +43,7 @@ body{
 
 .piece{
   width: 100%;
+  height: auto;
 }
 
 .square.highlight-square{
@@ -65,6 +66,7 @@ body{
 
 .promotion-piece img{
   width: 100%;
+  height: auto;
 }
 
 .promotion-piece:hover{
