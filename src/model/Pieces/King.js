@@ -113,8 +113,10 @@ class King extends Piece{
         if(hasKnightJumpingInCheck) return true
 
         //pawn
-        let hasLeftCloseDiagonalInCheck = squares[position.x + 1]?.[position.y + 1]?.piece?.color !== this.color && squares[position.x + 1]?.[position.y + 1]?.piece instanceof Pawn
-        let hasRightCloseDiagonalInCheck = squares[position.x + 1]?.[position.y - 1]?.piece?.color !== this.color && squares[position.x + 1]?.[position.y - 1]?.piece instanceof Pawn
+        const PAWN_COLOR_FACTOR = this.color === PLAYERS.WHITE ? 1 : -1
+
+        let hasLeftCloseDiagonalInCheck = squares[position.x + PAWN_COLOR_FACTOR]?.[position.y + 1]?.piece?.color !== this.color && squares[position.x + PAWN_COLOR_FACTOR]?.[position.y + 1]?.piece instanceof Pawn
+        let hasRightCloseDiagonalInCheck = squares[position.x + PAWN_COLOR_FACTOR]?.[position.y - 1]?.piece?.color !== this.color && squares[position.x + PAWN_COLOR_FACTOR]?.[position.y - 1]?.piece instanceof Pawn
         if(hasLeftCloseDiagonalInCheck || hasRightCloseDiagonalInCheck) return true
 
         //king
