@@ -7,6 +7,7 @@ import { Knight } from "./Pieces/Knight";
 import { Bishop } from "./Pieces/Bishop";
 import { King } from "./Pieces/King";
 import { Queen } from "./Pieces/Queen";
+import { PieceStrategy } from "./Pieces/PieceStrategy";
 
 class Board {
     constructor(playingNow = PLAYERS.WHITE){
@@ -80,11 +81,11 @@ class Board {
     update(squares, lastMove){
         //TODO logica para ir contando/reiniciando regla de 50 pasos
         //TODO detectar ahogado
-        //TODO detectar jaque
-        //TODO detectar jaquemate
         this.squares = squares
         this.lastMove = lastMove
         this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
+
+        this.isCheckmate()
     }
 
     isPlayerInCheck(squares = this.squares){
@@ -93,9 +94,20 @@ class Board {
     }
 
     hasAnyLegalMove(){
-        const isInCheck = this.isPlayerInCheck()
-
+        for(let i=0; i < this.squares.length; i++){
+            for (let j = 0; j < this.squares[i].length; j++) {
+                const square = this.squares[i][j];
+                
+                if(square.piece && square.piece.color === this.playingNow){
+                    const numOfLegalMoves = new PieceStrategy(square.piece, this).getLegalMoves(square.position).length
+                    if(numOfLegalMoves > 0){
+                        return true
+                    }
+                }
+            }
+        }
         
+        return false
     }
 
     isCheckmate(){

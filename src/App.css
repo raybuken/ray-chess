@@ -78,3 +78,26 @@ body{
   color: white;
   font-size: 30px;
 }
+
+.piece-in-check{
+  background-color: rgb(243, 62, 66);
+}
+
+.gameover-modal{
+  width: 75%;
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 1rem;
+  position: absolute;
+  z-index: 1;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%,50%);
+}
+
+.gameover-modal .results{
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+}

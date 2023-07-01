@@ -21,8 +21,8 @@ import {King} from '../../model/Pieces/King'
 
 import { PLAYERS } from '../../model/constants'
 
-export default function Piece({piece}){
-
+export default function Piece({piece, isInCheck}){
+   
    const getPieceSrc = () => {
       if(piece instanceof Bishop) return piece.color === PLAYERS.WHITE ? white_bishop : black_bishop
       if(piece instanceof Knight) return piece.color === PLAYERS.WHITE ? white_knight : black_knight
@@ -33,7 +33,7 @@ export default function Piece({piece}){
       return piece.color === PLAYERS.WHITE ? white_pawn : black_pawn
    }
 
-   if(piece) return <img className='piece' src={getPieceSrc()} alt="piece" width={32} height={32} />
+   if(piece) return <img className={`piece${isInCheck ? ' piece-in-check' : ''}`} src={getPieceSrc()} alt="piece" width={32} height={32} />
 
    return
 }

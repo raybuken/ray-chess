@@ -3,6 +3,8 @@ import Square from "./Square"
 import Promotion from "./Promotion"
 import { BoardDispatchContext, ChessBoardContext } from "../../context/chessBoardContext"
 import PlayingNow from "./PlayingNow"
+import GameOver from "./Gameover"
+import { PLAYERS } from "../../model/constants"
 
 function Board() {
     const board = useContext(ChessBoardContext)
@@ -10,6 +12,7 @@ function Board() {
     const [highlightMoves, setHighlightMoves] = useState([])
     const [promotion, setPromotion] = useState(null)
     const [fromSquare, setFromSquare] = useState(null)
+    const isCheckmate = board.isCheckmate()
 
     const getSquareColor = (rowNumber, squareNumber) => {
         if(rowNumber%2 === 0){
@@ -31,6 +34,7 @@ function Board() {
 
     return (
         <div className="game">
+            <GameOver checkmate={isCheckmate} winner={board.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE} />
             <PlayingNow/>
             {promotion && <Promotion piece={board.squares[promotion.x][promotion.y].piece} rowPosition={promotion.y} color={board.playingNow} promotePawn={promotePawn}/>}
             <div className="board">
