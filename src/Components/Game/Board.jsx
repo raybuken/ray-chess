@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Square from "./Square"
 import Promotion from "./Promotion"
 import { BoardDispatchContext, ChessBoardContext } from "../../context/chessBoardContext"
@@ -12,7 +12,24 @@ function Board() {
     const [highlightMoves, setHighlightMoves] = useState([])
     const [promotion, setPromotion] = useState(null)
     const [fromSquare, setFromSquare] = useState(null)
-    const isCheckmate = board.isCheckmate()
+    const [gameModal, setGameModal] = useState({
+        show: false,
+        winner: '',
+        draw: false,
+        reason: ''
+    })
+    const lastMove = board.lastMove
+
+    useEffect(() => {
+        if(board.isCheckmate()){
+            setGameModal({
+                show: true,
+                winner: board.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE,
+                draw: false,
+                reason: 'Jaquemate'
+            })
+        }
+    },[board, board.squares])
 
     const getSquareColor = (rowNumber, squareNumber) => {
         if(rowNumber%2 === 0){
@@ -34,7 +51,7 @@ function Board() {
 
     return (
         <div className="game">
-            <GameOver checkmate={isCheckmate} winner={board.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE} />
+            <GameOver modal={gameModal} updateModal={setGameModal} />
             <PlayingNow/>
             {promotion && <Promotion piece={board.squares[promotion.x][promotion.y].piece} rowPosition={promotion.y} color={board.playingNow} promotePawn={promotePawn}/>}
             <div className="board">
@@ -52,6 +69,7 @@ function Board() {
                                 updatePromotion={setPromotion}
                                 fromSquare = {fromSquare}
                                 updateFromSquare={setFromSquare}
+                                lastMove={lastMove}
                                 />
                     })
                 ))}

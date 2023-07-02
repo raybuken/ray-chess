@@ -1,5 +1,5 @@
 body{
-  background-color: rgba(2,2,3,.98);
+  background-color: rgba(2, 2, 3, 0.431);
 }
 #root {
   max-width: 1280px;
@@ -13,8 +13,8 @@ body{
 }
 
 .board{
-  width: 800px;
-  height: 800px;
+  width: 720px;
+  height: 720px;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   align-items: center;
@@ -23,8 +23,8 @@ body{
 }
 
 .square{
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   outline: 2px solid black;
   transform: rotate(180deg);
 }
@@ -46,22 +46,27 @@ body{
   height: auto;
 }
 
+.square.highlight-last-move{
+  background-color: rgb(255 233 103);
+}
+
 .square.highlight-square{
   background-color: skyblue;
 }
+
 
 .promotion{
   position: absolute;
   display: flex;
   flex-direction: column;
-  width: 100px;
+  width: 90px;
   background-color: white;
   z-index: 1;
 }
 
 .promotion .promotion-piece{
   width: 100%;
-  height: 100px;
+  height: 90px;
 }
 
 .promotion-piece img{
@@ -77,7 +82,23 @@ body{
 .playing-now{
   color: white;
   font-size: 30px;
+  display: flex;
+  justify-content: center;
 }
+
+.playing-now img{
+  width: 100px;
+  height: 100px;
+  background-color: rgb(44, 41, 41);
+  outline: 2px solid rgb(14, 0, 0);
+}
+
+.playing-now .highlight-white, .playing-now .highlight-black{
+  background-color: white;
+  transition: background-color .5s;
+}
+
+
 
 .piece-in-check{
   background-color: rgb(243, 62, 66);
@@ -85,8 +106,8 @@ body{
 
 .gameover-modal{
   width: 75%;
-  background-color: black;
-  border: 2px solid white;
+  background-color: rgba(255, 255, 255, .8);
+  border: 2px solid black;
   border-radius: 20px;
   padding: 1rem;
   position: absolute;
@@ -94,10 +115,35 @@ body{
   right: 50%;
   bottom: 50%;
   transform: translate(50%,50%);
+  color: black;
+  font-weight: bold;
 }
 
 .gameover-modal .results{
   font-size: 2rem;
   font-weight: bold;
-  color: white;
+  color: black;
+}
+
+.gameover-modal h2{
+  color: black;
+}
+
+.gameover-modal p{
+  font-size: 1.5rem;
+}
+
+.gameover-modal .close{
+  background-color: transparent;
+  color: black;
+  font-size: 2rem;
+  padding: 0;
+  display:block;
+  margin-left: auto;
+  border: none;
+  transition: scale .7s;
+}
+
+.close:hover{
+  scale: 1.2;
 }

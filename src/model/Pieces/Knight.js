@@ -1,3 +1,4 @@
+import { Move } from "../Move";
 import { Piece } from "../Piece";
 import { knightJumping } from "../utils/movements";
 
@@ -7,12 +8,14 @@ class Knight extends Piece{
         const squares = [...board.squares];
 
         if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
+            const isCapture = Boolean(toSquare.piece)
             squares[toSquare.position.x][toSquare.position.y].piece = fromSquare.piece
             squares[fromSquare.position.x][fromSquare.position.y].piece = null
 
             return {
                 ok: true,
-                squares
+                squares,
+                lastMove: new Move(fromSquare.position, toSquare.position, "Knight", isCapture)
             }
         }
 
@@ -24,6 +27,7 @@ class Knight extends Piece{
     }
 
     getLegalMoves(board, position){
+        //TODO filter moves if piece has a pin
         const squares = [...board.squares]
         const moves = knightJumping(this, squares, position)
         return moves

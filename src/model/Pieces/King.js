@@ -6,6 +6,7 @@ import { Rook } from './Rook'
 import { Pawn } from './Pawn'
 import { PLAYERS } from '../constants'
 import { Knight } from "./Knight"
+import { Move } from "../Move"
 class King extends Piece{
     constructor(color){
         super(color)
@@ -30,15 +31,17 @@ class King extends Piece{
                     squares[COLOR_FACTOR][7].piece = null
                 }
             }
+            const isCapture = Boolean(toSquare.piece)
+
+            fromSquare.piece.shortCastling = false
+            fromSquare.piece.longCastling = false
             squares[toSquare.position.x][toSquare.position.y].piece = fromSquare.piece
             squares[fromSquare.position.x][fromSquare.position.y].piece = null
 
-            this.shortCastling = false
-            this.longCastling = false
-
             return {
                 ok: true,
-                squares
+                squares,
+                lastMove: new Move(fromSquare.position, toSquare.position, "King", isCapture)
             }
         }
 
@@ -51,7 +54,14 @@ class King extends Piece{
 
     getLegalMoves(board, position){
         const squares = [...board.squares]
+        const kingColor = squares[position.x][position.y].piece.color
+        const currentKing = new King(kingColor)
+        currentKing.shortCastling = this.shortCastling
+        currentKing.longCastling = this.longCastling
+
+        squares[position.x][position.y].piece = null
         let moves = uniDirectional(this, squares, position).filter(move => !this.isInCheck(squares, move.position))
+        squares[position.x][position.y].piece = currentKing
 
         //Castling
         if(!this.isInCheck(squares, position)){
@@ -100,6 +110,7 @@ class King extends Piece{
 
     isInCheck(squares, position){
         //bishop and queen
+        
         let hasDiagonalInCheck = diagonal(this, squares, position).some(move => move.piece && move.piece?.color !== this.color && (move.piece instanceof Bishop || move.piece instanceof Queen))
         if(hasDiagonalInCheck) return true
 
@@ -125,6 +136,7 @@ class King extends Piece{
 
         return false
     }
+
 }
 
 export {King}

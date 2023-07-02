@@ -14,7 +14,7 @@ class Board {
         this.reset(playingNow)
     }
 
-    reset(playingNow){
+    reset(playingNow = PLAYERS.WHITE){
         const newSquares = [...new Array(8)]
         for(let i= 0; i < newSquares.length; i++){
             let column = [...new Array(8)]
@@ -84,16 +84,15 @@ class Board {
         this.squares = squares
         this.lastMove = lastMove
         this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
-
         this.isCheckmate()
     }
 
     isPlayerInCheck(squares = this.squares){
         const kingSquare = this.getKingSquare()
-        return kingSquare.piece.isInCheck(squares, kingSquare.position)
+        return kingSquare?.piece.isInCheck(squares, kingSquare.position)
     }
 
-    hasAnyLegalMove(){
+    playerHasLegalMove(){
         for(let i=0; i < this.squares.length; i++){
             for (let j = 0; j < this.squares[i].length; j++) {
                 const square = this.squares[i][j];
@@ -111,7 +110,7 @@ class Board {
     }
 
     isCheckmate(){
-        return this.isPlayerInCheck() && !this.hasAnyLegalMove()
+        return this.isPlayerInCheck() && !this.playerHasLegalMove()
     }
 
     getKingSquare(){
@@ -124,7 +123,7 @@ class Board {
                 }
             }
         }
-        throw new Error("Must have a king in the board!")
+        return null
     }
 }
 

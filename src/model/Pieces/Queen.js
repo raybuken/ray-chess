@@ -1,3 +1,4 @@
+import { Move } from '../Move';
 import {Piece} from '../Piece'
 import { diagonal, horizontal, vertical } from '../utils/movements';
 
@@ -7,12 +8,14 @@ class Queen extends Piece{
         const squares = [...board.squares];
 
         if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
+            const isCapture = Boolean(toSquare.piece)
             squares[toSquare.position.x][toSquare.position.y].piece = fromSquare.piece
             squares[fromSquare.position.x][fromSquare.position.y].piece = null
 
             return {
                 ok: true,
-                squares
+                squares,
+                lastMove: new Move(fromSquare.position, toSquare.position, "Queen", isCapture)
             }
         }
 

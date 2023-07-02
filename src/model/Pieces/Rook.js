@@ -1,3 +1,4 @@
+import { Move } from "../Move";
 import { Piece } from "../Piece";
 import { Square } from "../Square";
 import { horizontal, vertical } from "../utils/movements";
@@ -13,13 +14,15 @@ class Rook extends Piece{
         const squares = [...board.squares];
 
         if(this.isLegalMove(board, fromSquare.position, toSquare.position)){
+            const isCapture = Boolean(toSquare.piece)
             this.castling =false
             squares[toSquare.position.x][toSquare.position.y] = new Square(toSquare.position, fromSquare.piece)
             squares[fromSquare.position.x][fromSquare.position.y] = new Square(fromSquare.position)
 
             return {
                 ok: true,
-                squares
+                squares,
+                lastMove: new Move(fromSquare.position, toSquare.position, "Rook", isCapture)
             }
         }
 

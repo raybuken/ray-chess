@@ -19,6 +19,10 @@ class Square{
     setPiece(piece){
         this.piece = piece
     }
+
+    clone(){
+        return new Square(this.position, this.piece)
+    }
 }
 
 
