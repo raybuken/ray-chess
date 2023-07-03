@@ -30,7 +30,7 @@ class Board {
 
         this.squares = newSquares
         this.playingNow = playingNow
-        this.fivtyMovesDraw = 0
+        this.fiftyMovesDraw = 0
         this.lastMove = null
     }
 
@@ -79,7 +79,6 @@ class Board {
     }
 
     update(squares, lastMove){
-        //TODO logica para ir contando/reiniciando regla de 50 pasos
         this.squares = squares
         this.lastMove = lastMove
         this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE

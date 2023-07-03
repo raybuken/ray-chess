@@ -35,7 +35,15 @@ function Board() {
                 draw: true,
                 reason: "Ahogado"
             })
+        }else if(board.fiftyMovesDraw === 50){
+            setGameModal({
+                show: true,
+                winner:'',
+                draw: true,
+                reason: "haber pasado 50 turnos sin capturas ni movimientos de peón"
+            })
         }
+        console.log(board.fiftyMovesDraw)
     },[board, board.squares])
 
     const getSquareColor = (rowNumber, squareNumber) => {

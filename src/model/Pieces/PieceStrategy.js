@@ -15,6 +15,11 @@ class PieceStrategy{
 
         if(action.ok){
             this.board.update(action.squares, action.lastMove)
+            if(action.lastMove.isCapture || action.lastMove.type === "Pawn"){
+                this.board.fiftyMovesDraw = 0
+            }else{
+                this.board.fiftyMovesDraw+= 0.5
+            }
             return action
         }
         return action
