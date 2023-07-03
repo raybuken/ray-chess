@@ -28,6 +28,13 @@ function Board() {
                 draw: false,
                 reason: 'Jaquemate'
             })
+        }else if(board.isSlatemate()){
+            setGameModal({
+                show: true,
+                winner: '',
+                draw: true,
+                reason: "Ahogado"
+            })
         }
     },[board, board.squares])
 

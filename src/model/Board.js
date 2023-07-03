@@ -80,7 +80,6 @@ class Board {
 
     update(squares, lastMove){
         //TODO logica para ir contando/reiniciando regla de 50 pasos
-        //TODO detectar ahogado
         this.squares = squares
         this.lastMove = lastMove
         this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
@@ -124,6 +123,10 @@ class Board {
             }
         }
         return null
+    }
+
+    isSlatemate(){
+        return !this.playerHasLegalMove() && !this.isPlayerInCheck()
     }
 }
 
