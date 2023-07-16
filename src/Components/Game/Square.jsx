@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import Piece from "./Piece"
 import { BoardDispatchContext, ChessBoardContext } from "../../context/chessBoardContext"
 import { PLAYERS } from "../../model/constants"
@@ -24,17 +24,18 @@ function Square({square, squareColor, highlightMove, updateLegalMoves, updatePro
     }
 
     const handleClick = () => {
-        const {piece, position} = square
+        //TODO fix current square bug (refactor useEffect in board component)
+        //const {piece, position} = square
+        const {position} = square
 
         if(highlightMove){
             handleMove(square)
             updateLegalMoves([])
             updateFromSquare(null)
-
         }else{
-            const moves = new PieceStrategy(piece,board)?.getLegalMoves(position)?.map(sqr => sqr.position) ?? []
+            const moves = new PieceStrategy(board.squares[position.x][position.y].piece,board)?.getLegalMoves(position)?.map(sqr => sqr.position) ?? []
             updateLegalMoves(moves)
-            updateFromSquare(square)
+            updateFromSquare(square)                                            
         }
     }
 

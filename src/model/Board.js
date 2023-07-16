@@ -82,7 +82,6 @@ class Board {
         this.squares = squares
         this.lastMove = lastMove
         this.playingNow = this.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE
-        this.isCheckmate()
     }
 
     isPlayerInCheck(squares = this.squares){
@@ -107,10 +106,6 @@ class Board {
         return false
     }
 
-    isCheckmate(){
-        return this.isPlayerInCheck() && !this.playerHasLegalMove()
-    }
-
     getKingSquare(){
         for(let i=0;i<this.squares.length;i++){
             for(let j=0;j<this.squares[i].length;j++){
@@ -124,9 +119,15 @@ class Board {
         return null
     }
 
-    isSlatemate(){
-        return !this.playerHasLegalMove() && !this.isPlayerInCheck()
+    getGameStatus(){
+        const playerHasLegalMove = this.playerHasLegalMove()
+        const isPlayerInCheck = this.isPlayerInCheck()
+
+        if(!playerHasLegalMove){
+            return isPlayerInCheck ? 'checkmate' : 'slatemate'
+        }
     }
+
 }
 
 export { Board }

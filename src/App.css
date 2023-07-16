@@ -4,7 +4,6 @@ body{
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -87,8 +86,8 @@ body{
 }
 
 .playing-now img{
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   background-color: rgb(44, 41, 41);
   outline: 2px solid rgb(14, 0, 0);
 }
@@ -97,8 +96,6 @@ body{
   background-color: white;
   transition: background-color .5s;
 }
-
-
 
 .piece-in-check{
   background-color: rgb(243, 62, 66);
@@ -146,4 +143,34 @@ body{
 
 .close:hover{
   scale: 1.2;
+}
+
+.brand{
+  line-height: 1;
+  margin-top: 0;
+}
+
+.link{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding-top: .5rem;
+
+  color: white;
+  transition: color .5s;
+}
+
+@media(max-width:768px){
+  body{
+    place-items: center;
+  }
+  .board{
+    width: 500px;
+    height:500px;
+  }
+  .square{
+    width: 62.5px;
+    height: 62.5px;
+  }
 }

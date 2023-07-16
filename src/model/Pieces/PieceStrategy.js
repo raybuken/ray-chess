@@ -27,7 +27,7 @@ class PieceStrategy{
 
     getLegalMoves(position){
         let legalMoves = this.piece?.getLegalMoves(this.board, position) ?? []
-        if(!(this.piece instanceof King)){
+        if(this.piece && !(this.piece instanceof King)){
             const squares = [...this.board.squares]
             const fromSquare = squares[position.x][position.y].clone()
             
@@ -37,11 +37,11 @@ class PieceStrategy{
                 squares[move.position.x][move.position.y].piece = this.piece
                 squares[position.x][position.y].piece = null
 
-                const noInCheck = !this.board.isPlayerInCheck(squares)
+                const notInCheck = !this.board.isPlayerInCheck(squares)
                 squares[move.position.x][move.position.y] = toSquare
                 squares[position.x][position.y].piece = fromSquare.piece
 
-                return noInCheck
+                return notInCheck
             })
         }
         return legalMoves

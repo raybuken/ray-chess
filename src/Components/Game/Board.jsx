@@ -18,24 +18,29 @@ function Board() {
         draw: false,
         reason: ''
     })
-    const lastMove = board.lastMove
 
     useEffect(() => {
-        if(board.isCheckmate()){
+        const gameStatus = board.getGameStatus()
+
+        if(gameStatus === 'checkmate'){
             setGameModal({
                 show: true,
                 winner: board.playingNow === PLAYERS.WHITE ? PLAYERS.BLACK : PLAYERS.WHITE,
                 draw: false,
                 reason: 'Jaquemate'
             })
-        }else if(board.isSlatemate()){
+        }
+
+        if(gameStatus === 'slatemate'){
             setGameModal({
                 show: true,
                 winner: '',
                 draw: true,
                 reason: "Ahogado"
             })
-        }else if(board.fiftyMovesDraw === 50){
+        }
+
+        if(board.fiftyMovesDraw === 50){
             setGameModal({
                 show: true,
                 winner:'',
@@ -43,8 +48,10 @@ function Board() {
                 reason: "haber pasado 50 turnos sin capturas ni movimientos de peón"
             })
         }
-        console.log(board.fiftyMovesDraw)
+        
     },[board, board.squares])
+
+    const lastMove = board.lastMove
 
     const getSquareColor = (rowNumber, squareNumber) => {
         if(rowNumber%2 === 0){
@@ -75,7 +82,7 @@ function Board() {
                         const color = getSquareColor(i, j)
                         const highlightMove = Boolean(highlightMoves.find(el => el.x === i && el.y === j))
                         return <Square 
-                                key={j} 
+                                key={i + "," + j} 
                                 square={square} 
                                 squareColor={color} 
                                 highlightMove={highlightMove} 
